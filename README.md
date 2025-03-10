@@ -1028,7 +1028,7 @@ Modifiez votre `App.vue` pour intégrer le routeur:
     </main>
     
     <footer>
-      <p>© 2023 Ma Boutique Vue.js - Tutoriel Vue Router</p>
+      <p>© 2025 Ma Boutique Vue.js - Tutoriel Vue Router</p>
     </footer>
   </div>
 </template>
