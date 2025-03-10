@@ -1,34 +1,19 @@
 <script setup>
 import { ref } from 'vue'
+import { useProductStore, useCartStore } from '../stores'
 import ProductCard from '../components/ProductCard.vue'
 
-// Données de l'application
-const products = [
-  {
-    id: 1,
-    title: 'Produit A',
-    price: 19.99,
-    description: 'Un produit de qualité supérieure',
-    inStock: true,
-    image: '/images/product-a.jpg'
-  },
-  {
-    id: 2,
-    title: 'Produit B',
-    price: 29.99,
-    description: 'Notre meilleure vente',
-    inStock: true,
-    image: '/images/product-b.jpg'
-  },
-  {
-    id: 3,
-    title: 'Produit C',
-    price: 15.50,
-    description: 'Édition limitée',
-    inStock: false,
-    image: '/images/product-c.jpg'
-  }
-]
+// Get stores
+const productStore = useProductStore()
+const cartStore = useCartStore()
+
+// Get products from the store
+const products = productStore.products
+
+// Handle add to cart event
+const handleAddToCart = (product) => {
+  cartStore.addToCart(product)
+}
 </script>
 
 <template>
@@ -42,7 +27,7 @@ const products = [
         :price="product.price"
         :description="product.description"
         :inStock="product.inStock"
-        @add-to-cart="$emit('add-to-cart', $event)"
+        @add-to-cart="handleAddToCart"
       />
     </div>
   </div>
@@ -51,19 +36,35 @@ const products = [
 <style scoped>
 .home {
   width: 100%;
+  animation: fadeIn var(--transition-normal);
 }
 
 .products-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: var(--spacing-lg);
   justify-content: center;
-  margin-top: 20px;
+  margin-top: var(--spacing-lg);
 }
 
 h2 {
   text-align: center;
-  margin-bottom: 20px;
-  color: #42b883;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+  position: relative;
+  padding-bottom: var(--spacing-sm);
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background-color: var(--color-primary-light);
+  border-radius: var(--border-radius-sm);
 }
 </style>

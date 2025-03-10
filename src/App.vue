@@ -28,22 +28,66 @@
 .app {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--spacing-lg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+header h1 {
+  color: var(--color-primary);
+  margin-bottom: 0;
+}
+
+nav {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+nav a {
+  color: var(--color-secondary);
+  font-weight: 500;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-fast);
+}
+
+nav a:hover {
+  color: var(--color-primary);
+  background-color: var(--color-background-light);
+}
+
+nav a.router-link-active {
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+main {
+  flex: 1;
+}
+
+footer {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
 }
 
 .products-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: var(--spacing-lg);
   justify-content: center;
 }
 </style>

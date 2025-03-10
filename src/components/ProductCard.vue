@@ -71,55 +71,75 @@ const addToCart = () => {
 
 <style scoped>
 .product-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 16px 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  margin: var(--spacing-md) 0;
   max-width: 300px;
+  box-shadow: var(--box-shadow);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .price {
   font-weight: bold;
-  font-size: 1.2em;
-  color: #42b883;
+  font-size: var(--font-size-lg);
+  color: var(--color-primary);
 }
 
 .stock {
-  font-size: 0.9em;
+  font-size: var(--font-size-sm);
 }
 
 .out-of-stock {
-  color: red;
+  color: var(--color-accent);
 }
 
 .quantity-selector {
   display: flex;
   align-items: center;
-  margin: 10px 0;
+  margin: var(--spacing-md) 0;
 }
 
 .quantity-selector button {
-  background-color: #f1f1f1;
-  border: none;
-  padding: 5px 10px;
+  background-color: var(--color-background-light);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
   cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.quantity-selector button:hover {
+  background-color: var(--color-border);
 }
 
 .quantity-selector span {
-  margin: 0 10px;
+  margin: 0 var(--spacing-md);
+  font-weight: bold;
 }
 
 .add-to-cart {
-  background-color: #42b883;
+  background-color: var(--color-primary);
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
   cursor: pointer;
+  width: 100%;
+  transition: background-color var(--transition-fast);
+}
+
+.add-to-cart:hover {
+  background-color: var(--color-primary-dark);
 }
 
 .add-to-cart:disabled {
-  background-color: #cccccc;
+  background-color: var(--color-text-light);
   cursor: not-allowed;
 }
 </style>

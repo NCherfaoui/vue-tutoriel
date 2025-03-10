@@ -1,44 +1,18 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useProductStore, useCartStore } from '../stores'
 
 const route = useRoute()
 const router = useRouter()
 
-// Dans une application réelle, ces données viendraient d'une API
-const products = [
-  {
-    id: 1,
-    title: 'Produit A',
-    price: 19.99,
-    description: 'Un produit de qualité supérieure',
-    inStock: true,
-    image: '/images/product-a.jpg',
-    details: 'Ce produit est fabriqué avec les meilleurs matériaux et offre une durabilité exceptionnelle.'
-  },
-  {
-    id: 2,
-    title: 'Produit B',
-    price: 29.99,
-    description: 'Notre meilleure vente',
-    inStock: true,
-    image: '/images/product-b.jpg',
-    details: 'Le produit B est notre best-seller grâce à son excellent rapport qualité-prix.'
-  },
-  {
-    id: 3,
-    title: 'Produit C',
-    price: 15.50,
-    description: 'Édition limitée',
-    inStock: false,
-    image: '/images/product-c.jpg',
-    details: 'Le produit C est une édition limitée avec des caractéristiques uniques.'
-  }
-]
+// Get stores
+const productStore = useProductStore()
+const cartStore = useCartStore()
 
 // Récupérer le produit correspondant à l'ID dans l'URL
 const productId = parseInt(route.params.id)
-const product = computed(() => products.find(p => p.id === productId))
+const product = computed(() => productStore.getProductById(productId))
 
 // Initialiser la quantité
 const quantity = ref(1)
@@ -57,8 +31,8 @@ const addToCart = (quantity) => {
       price: product.value.price,
       quantity: quantity
     }
-    // Dans une application réelle, nous utiliserions un store pour gérer le panier
-    alert(`${quantity} ${product.value.title} ajouté(s) au panier!`)
+    // Utiliser le store pour gérer le panier
+    cartStore.addToCart(cartItem)
     router.push('/cart')
   }
 }
@@ -111,22 +85,29 @@ const addToCart = (quantity) => {
 .product-detail {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--spacing-lg);
+  animation: fadeIn var(--transition-normal);
 }
 
 .back-button {
   background: none;
   border: none;
-  color: #42b883;
+  color: var(--color-primary);
   cursor: pointer;
-  font-size: 1.1em;
-  margin-bottom: 20px;
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-lg);
   padding: 0;
+  transition: color var(--transition-fast);
+}
+
+.back-button:hover {
+  color: var(--color-primary-dark);
 }
 
 .product-content {
   display: flex;
-  gap: 30px;
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-md);
 }
 
 .product-image {
@@ -134,14 +115,20 @@ const addToCart = (quantity) => {
 }
 
 .placeholder-image {
-  background-color: #f0f0f0;
-  border-radius: 8px;
-  color: #666;
+  background-color: var(--color-background-light);
+  border-radius: var(--border-radius-md);
+  color: var(--color-text-light);
   display: flex;
   align-items: center;
   justify-content: center;
   height: 300px;
-  font-size: 1.5em;
+  font-size: var(--font-size-xl);
+  box-shadow: var(--box-shadow);
+  transition: transform var(--transition-normal);
+}
+
+.placeholder-image:hover {
+  transform: scale(1.02);
 }
 
 .product-info {
@@ -149,15 +136,16 @@ const addToCart = (quantity) => {
 }
 
 .price {
-  color: #42b883;
-  font-size: 1.5em;
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
   font-weight: bold;
-  margin: 10px 0;
+  margin: var(--spacing-sm) 0;
 }
 
 .description {
-  font-size: 1.1em;
-  margin-bottom: 15px;
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.6;
 }
 
 .stock {
@@ -165,14 +153,15 @@ const addToCart = (quantity) => {
 }
 
 .out-of-stock {
-  color: red;
+  color: var(--color-accent);
 }
 
 .details {
-  margin: 20px 0;
-  padding: 15px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing-md);
+  background-color: var(--color-background-light);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--box-shadow);
 }
 
 .actions {
@@ -186,13 +175,18 @@ const addToCart = (quantity) => {
 }
 
 .quantity-selector button {
-  background-color: #f0f0f0;
-  border: none;
-  border-radius: 4px;
+  background-color: var(--color-background-light);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
-  font-size: 1.2em;
+  font-size: var(--font-size-lg);
   height: 30px;
   width: 30px;
+  transition: all var(--transition-fast);
+}
+
+.quantity-selector button:hover {
+  background-color: var(--color-border);
 }
 
 .quantity-selector span {
@@ -201,29 +195,40 @@ const addToCart = (quantity) => {
 }
 
 .add-to-cart {
-  background-color: #42b883;
+  background-color: var(--color-primary);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-md);
   color: white;
   cursor: pointer;
-  font-size: 1em;
-  padding: 10px 20px;
+  font-size: var(--font-size-md);
+  padding: var(--spacing-sm) var(--spacing-md);
   width: 100%;
+  transition: background-color var(--transition-fast);
+}
+
+.add-to-cart:hover {
+  background-color: var(--color-primary-dark);
 }
 
 .not-found {
   text-align: center;
-  margin-top: 50px;
+  margin-top: var(--spacing-xl);
+  animation: fadeIn var(--transition-normal);
 }
 
 .not-found button {
-  background-color: #42b883;
+  background-color: var(--color-primary);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-md);
   color: white;
   cursor: pointer;
-  font-size: 1em;
-  margin-top: 20px;
-  padding: 10px 20px;
+  font-size: var(--font-size-md);
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: background-color var(--transition-fast);
+}
+
+.not-found button:hover {
+  background-color: var(--color-primary-dark);
 }
 </style>

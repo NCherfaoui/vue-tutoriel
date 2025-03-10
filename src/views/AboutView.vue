@@ -16,11 +16,20 @@
 .about {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--spacing-lg);
+  animation: fadeIn var(--transition-normal);
+}
+
+h1 {
+  color: var(--color-primary);
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
 }
 
 p {
   line-height: 1.6;
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-md);
+  color: var(--color-text);
 }
 </style>

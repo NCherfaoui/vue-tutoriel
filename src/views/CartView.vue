@@ -1,38 +1,18 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useCartStore } from '../stores'
 
 const router = useRouter()
+const cartStore = useCartStore()
 
-// Dans une application réelle, ces données viendraient d'un store
-const cartItems = ref([
-  {
-    id: 1,
-    title: 'Produit A',
-    price: 19.99,
-    quantity: 2
-  },
-  {
-    id: 2,
-    title: 'Produit B',
-    price: 29.99,
-    quantity: 1
-  }
-])
-
-// Calculer le total du panier
-const cartTotal = computed(() => {
-  return cartItems.value.reduce((total, item) => {
-    return total + (item.price * item.quantity)
-  }, 0)
-})
+// Calculer le total du panier (maintenant géré par le store)
+const cartItems = computed(() => cartStore.items)
+const cartTotal = computed(() => cartStore.cartTotal)
 
 // Supprimer un article du panier
 const removeFromCart = (itemId) => {
-  const index = cartItems.value.findIndex(item => item.id === itemId)
-  if (index !== -1) {
-    cartItems.value.splice(index, 1)
-  }
+  cartStore.removeFromCart(itemId)
 }
 
 // Continuer les achats
@@ -104,18 +84,18 @@ const checkout = () => {
 .cart-view {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--spacing-lg);
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 30px;
-  color: #42b883;
+  margin-bottom: var(--spacing-xl);
+  color: var(--color-primary);
 }
 
 .cart-content {
   display: flex;
-  gap: 30px;
+  gap: var(--spacing-xl);
 }
 
 .cart-items {
@@ -125,10 +105,16 @@ h1 {
 .cart-item {
   display: flex;
   justify-content: space-between;
-  padding: 15px;
-  margin-bottom: 15px;
-  border: 1px solid #eee;
-  border-radius: 8px;
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--box-shadow);
+  transition: transform var(--transition-fast);
+}
+
+.cart-item:hover {
+  transform: translateY(-3px);
 }
 
 .item-info h3 {
@@ -137,12 +123,12 @@ h1 {
 }
 
 .price {
-  color: #42b883;
+  color: var(--color-primary);
   font-weight: bold;
 }
 
 .quantity {
-  color: #666;
+  color: var(--color-text-light);
 }
 
 .item-actions {
@@ -159,62 +145,81 @@ h1 {
 
 .remove-button {
   background: none;
-  border: 1px solid #ff6b6b;
-  color: #ff6b6b;
-  border-radius: 4px;
-  padding: 5px 10px;
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
   cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.remove-button:hover {
+  background-color: var(--color-accent);
+  color: white;
 }
 
 .cart-summary {
   flex: 1;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  padding: var(--spacing-lg);
+  background-color: var(--color-background-light);
+  border-radius: var(--border-radius-md);
   align-self: flex-start;
+  box-shadow: var(--box-shadow);
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+  margin-bottom: var(--spacing-sm);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .total {
   font-weight: bold;
-  font-size: 1.2em;
-  color: #42b883;
+  font-size: var(--font-size-lg);
+  color: var(--color-primary);
 }
 
 .checkout-button {
-  background-color: #42b883;
+  background-color: var(--color-primary);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-md);
   color: white;
   cursor: pointer;
-  font-size: 1em;
-  padding: 10px 20px;
+  font-size: var(--font-size-md);
+  padding: var(--spacing-sm) var(--spacing-md);
   width: 100%;
-  margin-top: 20px;
+  margin-top: var(--spacing-lg);
+  transition: background-color var(--transition-fast);
+}
+
+.checkout-button:hover {
+  background-color: var(--color-primary-dark);
 }
 
 .continue-button {
   background: none;
-  border: 1px solid #42b883;
-  color: #42b883;
-  border-radius: 4px;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  border-radius: var(--border-radius-md);
   cursor: pointer;
-  font-size: 1em;
-  padding: 10px 20px;
+  font-size: var(--font-size-md);
+  padding: var(--spacing-sm) var(--spacing-md);
   width: 100%;
-  margin-top: 10px;
+  margin-top: var(--spacing-sm);
+  transition: all var(--transition-fast);
+}
+
+.continue-button:hover {
+  background-color: var(--color-primary-light);
+  color: white;
 }
 
 .empty-cart {
   text-align: center;
-  padding: 50px 0;
+  padding: var(--spacing-xl) 0;
+  animation: fadeIn var(--transition-normal);
 }
 
 .empty-cart p {
