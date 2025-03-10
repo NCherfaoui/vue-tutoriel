@@ -1,30 +1,49 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+// Aucune logique nécessaire ici car la gestion des routes est maintenant dans le routeur
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="app">
+    <header>
+      <h1>Ma Boutique Vue.js</h1>
+      <nav>
+        <router-link to="/">Accueil</router-link> |
+        <router-link to="/cart">Panier</router-link> |
+        <router-link to="/about">À propos</router-link>
+      </nav>
+    </header>
+    
+    <main>
+      <!-- Le composant correspondant à la route actuelle sera rendu ici -->
+      <router-view />
+    </main>
+    
+    <footer>
+      <p>© 2023 Ma Boutique Vue.js - Tutoriel Vue Router</p>
+    </footer>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.products-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
 }
 </style>
